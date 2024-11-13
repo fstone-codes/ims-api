@@ -7,7 +7,7 @@ const router = express.Router();
 router.route("/").get(warehouseController.index);
 
 // Route for "/warehouses/:id"
-router.route("/:id").get(warehouseController.getWhinventories);
+router.route("/:id").get(warehouseController.findOne);
 
 // Route for "/warehouses/:id/inventories"
 router.route("/:id/inventories").get(warehouseController.inventories);
