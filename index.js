@@ -4,7 +4,7 @@ import cors from "cors";
 
 const app = express();
 
-const { DB_PORT = 3000, CORS_ORIGIN } = process.env;
+const { DB_PORT, CORS_ORIGIN } = process.env;
 
 app.use(cors({ origin: CORS_ORIGIN }));
 app.use(express.json());
@@ -18,11 +18,11 @@ import inventoryRoutes from "./routes/inventory-routes.js";
 app.use("/inventory", inventoryRoutes);
 
 app.get("/", (req, res) => {
-    res.send("👋 Hello from server");
+  res.send("👋 Hello from server");
 });
 
 // Server setup
 app.listen(DB_PORT, () => {
-    console.log(`Server is listening at http://localhost:${DB_PORT}`);
-    console.log("Press CTRL + C or CMD + C to stop server");
+  console.log(`Server is listening at http://localhost:${DB_PORT}`);
+  console.log("Press CTRL + C or CMD + C to stop server");
 });
