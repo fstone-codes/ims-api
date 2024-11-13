@@ -4,7 +4,7 @@ import cors from "cors";
 
 const app = express();
 
-const { DB_PORT, CORS_ORIGIN } = process.env;
+const { DB_PORT = 3000, CORS_ORIGIN } = process.env;
 
 app.use(cors({ origin: CORS_ORIGIN }));
 app.use(express.json());
