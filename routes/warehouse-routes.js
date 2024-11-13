@@ -7,6 +7,6 @@ const router = express.Router();
 router.route("/").get(warehouseController.index);
 
 // Route for "/warehouses/:id"
-router.route("/:id");
+router.route("/:id").get(warehouseController.getWhinventories);
 
 export default router;
