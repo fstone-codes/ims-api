@@ -15,7 +15,7 @@ app.use("/api/warehouses", warehouseRoutes);
 
 // All inventory routes
 import inventoryRoutes from "./routes/inventory-routes.js";
-app.use("/inventory", inventoryRoutes);
+app.use("/api/inventories", inventoryRoutes);
 
 app.get("/", (req, res) => {
   res.send("👋 Hello from server");
