@@ -25,7 +25,7 @@ const getWhinventories = async (req, res) => {
       }
   
       const whData = whFound[0];
-      res.json(whData);
+      res.status(200).json(whData);
     } catch (error) {
       res.status(500).json({
         message: `Unable to retrieve warehouse data for user with ID ${req.params.id}`,
@@ -47,7 +47,7 @@ const inventories = async (req, res) => {
             "inventories.quantity",
         );
   
-      res.json(inventories);
+      res.status(200).json(inventories);
     } catch (error) {
       res.status(500).json({
         message: `Unable to retrieve inventories for warehouse with ID ${req.params.id}: ${error}`,
