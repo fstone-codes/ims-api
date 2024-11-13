@@ -9,4 +9,7 @@ router.route("/").get(warehouseController.index);
 // Route for "/warehouses/:id"
 router.route("/:id").get(warehouseController.getWhinventories);
 
+// Route for "/warehouses/:id/inventories"
+router.route("/:id/inventories").get(warehouseController.inventories);
+
 export default router;

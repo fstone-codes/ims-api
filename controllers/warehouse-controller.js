@@ -33,7 +33,30 @@ const getWhinventories = async (req, res) => {
     }
   };
 
+// Route "/api/warehouses/:id/inventories"
+const inventories = async (req, res) => {
+    try {
+      const inventories = await knex("warehouses")
+        .join("inventories", "inventories.warehouse_id", "warehouses.id")
+        .where({ warehouse_id: req.params.id })
+        .select(
+            "inventories.id",
+            "inventories.item_name",
+            "inventories.category",
+            "inventories.status",
+            "inventories.quantity",
+        );
+  
+      res.json(inventories);
+    } catch (error) {
+      res.status(500).json({
+        message: `Unable to retrieve inventories for warehouse with ID ${req.params.id}: ${error}`,
+      });
+    }
+  };
+
 export { 
     index,
     getWhinventories,
+    inventories,
  };
