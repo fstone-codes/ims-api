@@ -1,14 +1,12 @@
 import express from "express";
+import * as warehouseController from "../controllers/warehouse-controller.js";
 
 const router = express.Router();
 
-// Route for "/warehouses"
-router.route("/").get((req, res) => (
-    res.send("Hello from warehouses")
-))
+// Route "/api/warehouses/"
+router.route("/").get(warehouseController.index);
 
 // Route for "/warehouses/:id"
-router
-    .route("/:id")
+router.route("/:id");
 
 export default router;
