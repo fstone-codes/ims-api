@@ -12,4 +12,7 @@ router.route("/:id").get(warehouseController.findOne);
 // Route for "/warehouses/:id/inventories"
 router.route("/:id/inventories").get(warehouseController.inventories);
 
+//Route for "/warehouses/add"
+router.route("/add").post(warehouseController.addWarehouse);
+
 export default router;
