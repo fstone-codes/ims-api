@@ -52,4 +52,26 @@ export const inventories = async (req, res) => {
     }
   };
 
+//controller to add new warehouse
+  export const addWarehouse = async (req, res) => {
+    const { warehouseName, streetAddress, city, country, contactName, position, phoneNumber, email } = req.body;
+    if (!warehouseName || !streetAddress || !city || !country || !contactName || !position || !phoneNumber || !email) {
+        return res.status(400).json({ message: 'Please fill out all required fields.' });
+    }
+    try {
+        const [newWarehouseId] = await knex("warehouses").insert({
+            warehouseName,
+            streetAddress,
+            city,
+            country,
+            contactName,
+            position,
+            phoneNumber,
+            email
+        });
+        res.status(201).json({ message: 'Warehouse created successfully!', warehouseId: newWarehouseId });
+    } catch (error) {
+        res.status(500).json({ message: 'Failed to add warehouse.', error: error.message });
+    }
+};
 
