@@ -8,8 +8,9 @@ const { DB_PORT, CORS_ORIGIN } = process.env;
 
 app.use(cors({ origin: CORS_ORIGIN, 
         methods: "GET,POST,PUT,DELETE,OPTIONS",
-        allowedHeaders: "Content-Type,Authorization"
-}));
+        allowedHeaders: "Content-Type, Authorization"
+        }));
+
 app.use(express.json());
 
 // All warehouse routes
