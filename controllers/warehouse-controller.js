@@ -59,7 +59,7 @@ export const inventories = async (req, res) => {
         return res.status(400).json({ message: 'Please fill out all required fields.' });
     }
     try {
-        const [newWarehouseId] = await knex("warehouses").insert({
+        const [newWarehouseId] = await knex('warehouses').insert({
             warehouse_name,
             address,
             city,
@@ -69,7 +69,7 @@ export const inventories = async (req, res) => {
             contact_phone,
             contact_email
         });
-        res.status(201).json({ message: 'Warehouse added successfully!', warehouseId: newWarehouseId });
+        res.status(201).json({ message: 'Warehouse added successfully!', warehouseId: newWarehouseId.id || newWarehouseId });
     } catch (error) {
         console.error('Error creating warehouse:', error);
         res.status(500).json({ message: 'Unable to add warehouse.', error: error.message });

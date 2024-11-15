@@ -6,7 +6,7 @@ export function up(knex) {
   return knex.schema.createTable('warehouses', (table) => {
     table.increments('id').primary();
     table.string('warehouse_name').notNullable();
-    table.string('address').notNullable();
+    table.string('address').notNullable()
     table.string('city').notNullable();
     table.string('country').notNullable();
     table.string('contact_name').notNullable();
