@@ -54,6 +54,7 @@ export const addItem = async (req, res) => {
       });
   }
 
+  
   try {
     // insert request body into database ("inventories" table)
     const data = await knex("inventories").insert(req.body);
