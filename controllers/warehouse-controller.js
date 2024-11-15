@@ -108,12 +108,13 @@ export const addWarehouse = async (req, res) => {
       contact_phone,
       contact_email,
     });
+
+  const [createdWarehouse] = await knex("warehouses").where({ id: newWarehouseId});
+   const { created_at, updated_at, ...newWarehouse } = createdWarehouse;
     res
       .status(201)
-      .json({
-        message: "Warehouse added successfully!",
-        warehouseId: newWarehouseId.id || newWarehouseId,
-      });
+      .json(newWarehouse);
+
   } catch (error) {
     console.error("Error creating warehouse:", error);
     res
