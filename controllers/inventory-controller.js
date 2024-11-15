@@ -88,3 +88,18 @@ export const deleteSpecificInventory = async (req, res) => {
     res.status(500).json({ error: "Error deleting a specific inventory." });
   }
 };
+
+// Find a specific inventory "/api/inventories/:id"
+export const findOne = async (req, res) => {
+    const inventoryId = req.params.id;
+    try {
+        const inventory = await knex("inventories").where({ id: inventoryId }).first();
+        if (!inventory) {
+            return res.status(404).json({ error: `Inventory with ID ${id} not found.` });
+        }
+        res.status(200).json(inventory);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Error getting inventory by ID" });
+    }
+}
