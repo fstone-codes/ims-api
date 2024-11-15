@@ -71,6 +71,7 @@ export const inventories = async (req, res) => {
         });
         res.status(201).json({ message: 'Warehouse added successfully!', warehouseId: newWarehouseId });
     } catch (error) {
+        console.error('Error creating warehouse:', error);
         res.status(500).json({ message: 'Unable to add warehouse.', error: error.message });
     }
 };
