@@ -98,15 +98,26 @@ export const deleteSpecificInventory = async (req, res) => {
 export const findOne = async (req, res) => {
     const inventoryId = req.params.id;
     try {
-        const inventory = await knex("inventories").where({ id: inventoryId }).first();
+        const inventory = await knex("inventories")
+          .join("warehouses", "inventories.warehouse_id", "=", "warehouses.id")
+          // Tells the program exactly which table id to look at
+          .where("inventories.id", inventoryId)
+          .select(
+            "inventories.id",
+            "warehouses.warehouse_name",
+            "inventories.item_name",
+            "inventories.description",
+            "inventories.category",
+            "inventories.status",
+            "inventories.quantity"
+          )
+          .first();
+
         if (!inventory) {
             return res.status(404).json({ error: `Inventory with ID ${inventoryId} not found.` });
         }
 
-        const [singleInventory] = await knex("inventories").where({ id: inventoryId });
-        const { created_at, updated_at, ...filteredInventory } = singleInventory;
-
-        res.status(200).json(filteredInventory);
+        res.status(200).json(inventory);
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: "Error getting inventory by ID" });
