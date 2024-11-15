@@ -9,6 +9,9 @@ router.route("/").get(warehouseController.index);
 // Route for "/warehouses/:id"
 router.route("/:id").get(warehouseController.findOne);
 
+// Route to delete a specific warehouse for "/warehouses/:id"
+router.route("/:id").delete(warehouseController.deleteOne);
+
 // Route for "/warehouses/:id/inventories"
 router.route("/:id/inventories").get(warehouseController.inventories);
 

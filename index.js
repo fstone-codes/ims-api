@@ -22,11 +22,11 @@ import inventoryRoutes from "./routes/inventory-routes.js";
 app.use("/api/inventories", inventoryRoutes);
 
 app.get("/", (req, res) => {
-  res.send("👋 Hello from server");
+    res.send("👋 Hello from server");
 });
 
 // Server setup
 app.listen(DB_PORT, () => {
-  console.log(`Server is listening at http://localhost:${DB_PORT}`);
-  console.log("Press CTRL + C or CMD + C to stop server");
+    console.log(`Server is listening at http://localhost:${DB_PORT}`);
+    console.log("Press CTRL + C or CMD + C to stop server");
 });
