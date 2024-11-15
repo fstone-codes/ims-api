@@ -13,6 +13,9 @@ router.route("/").post(inventoryController.addItem);
 router.route("/:id").delete(inventoryController.deleteSpecificInventory);
 
 
+//route for adding inventory
+router.route("/:id").put(inventoryController.putSpecificInventory)
+
 // // Route for "/inventories"
 // router.route("/").get((req, res) => (
 //     res.send("Hello from inventory")
