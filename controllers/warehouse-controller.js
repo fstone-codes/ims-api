@@ -14,7 +14,7 @@ export const index = async (req, res) => {
     }
 };
 
-//Controller to get warehouse by ID
+//Controller to get warehouse by ID "/api/warehouses/:id"
 export const findOne = async (req, res) => {
     const warehouseId = req.params.id;
     try {
@@ -48,5 +48,22 @@ export const inventories = async (req, res) => {
         res.status(500).json({
             message: `Unable to retrieve inventories for warehouse with ID ${req.params.id}: ${error}`,
         });
+    }
+};
+
+export const deleteOne = async (req, res) => {
+    const warehouseId = req.params.id;
+    try {
+        const warehouse = await knex("warehouses").where({ id: warehouseId }).first();
+        // Check if warehouse matching the id exists
+        if (!warehouse) {
+            return res.status(404).json({ error: "Warehouse not found." });
+        }
+        // Delete the warehouse
+        await knex("warehouses").where({ id: warehouseId }).del();
+        res.status(204).send();
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Error getting warehouse by Id" });
     }
 };
