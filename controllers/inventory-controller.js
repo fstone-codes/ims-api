@@ -81,19 +81,36 @@ export const addItem = async (req, res) => {
 
 //delete inventory with specific id function
 export const deleteSpecificInventory = async (req, res) => {
-  const inventoryId = req.params.id;
-  try {
-    const inventoryItem = await knex("inventories")
-      .where({ id: inventoryId })
-      .first();
-    if (!inventoryItem) {
-      return res.status(404).json({ error: "Invetory item was not found." });
+    const inventoryId = req.params.id;
+    try {
+        const inventoryItem = await knex("inventories").where({ id: inventoryId }).first();
+        if (!inventoryItem) {
+            return res.status(404).json({ error: "Invetory item was not found." });
+        }
+        await knex("inventories").where({ id: inventoryId }).del();
+        res.status(204).send();
+    } catch (error) {
+        res.status(500).json({ error: "Error deleting a specific inventory." });
     }
-    await knex("inventories").where({ id: inventoryId }).del();
-    res.status(204).send();
-  } catch (error) {
-    res.status(500).json({ error: "Error deleting a specific inventory." });
-  }
+};
+
+// Find a specific inventory "/api/inventories/:id"
+export const findOne = async (req, res) => {
+    const inventoryId = req.params.id;
+    try {
+        const inventory = await knex("inventories").where({ id: inventoryId }).first();
+        if (!inventory) {
+            return res.status(404).json({ error: `Inventory with ID ${inventoryId} not found.` });
+        }
+
+        const [singleInventory] = await knex("inventories").where({ id: inventoryId });
+        const { created_at, updated_at, ...filteredInventory } = singleInventory;
+
+        res.status(200).json(filteredInventory);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Error getting inventory by ID" });
+    }
 };
 
 //put/edit an inventory item
