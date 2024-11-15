@@ -143,7 +143,9 @@ export const putSpecificInventory = async (req, res) => {
       quantity,
     });
 
-    const newInventory = await knex("inventories").where({ id }).first();
+    const [createdInventory] = await knex("inventories").where({ id });
+    const { created_at, updated_at, ...newInventory } = createdInventory;
+    
     res.status(200).json(newInventory);
   } catch (error) {
     res.status(500).json({ error: "Error updating inventory" });
