@@ -54,20 +54,20 @@ export const inventories = async (req, res) => {
 
 //controller to add new warehouse
   export const addWarehouse = async (req, res) => {
-    const { warehouseName, streetAddress, city, country, contactName, position, phoneNumber, email } = req.body;
-    if (!warehouseName || !streetAddress || !city || !country || !contactName || !position || !phoneNumber || !email) {
+    const { warehouse_name, address, city, country, contact_name, contact_position, contact_phone, contact_email } = req.body;
+    if (!warehouse_name || !address || !city || !country || !contact_name || !contact_position || !contact_phone || !contact_email) {
         return res.status(400).json({ message: 'Please fill out all required fields.' });
     }
     try {
         const [newWarehouseId] = await knex("warehouses").insert({
-            warehouseName,
-            streetAddress,
+            warehouse_name,
+            address,
             city,
             country,
-            contactName,
-            position,
-            phoneNumber,
-            email
+            contact_name,
+            contact_position,
+            contact_phone,
+            contact_email
         });
         res.status(201).json({ message: 'Warehouse added successfully!', warehouseId: newWarehouseId });
     } catch (error) {
