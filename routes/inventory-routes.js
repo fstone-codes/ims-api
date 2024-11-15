@@ -9,6 +9,9 @@ router.route("/").get(inventoryController.getAllInventory);
 // Route "/api/inventories/"
 router.route("/").post(inventoryController.addItem);
 
+//route for adding inventory
+router.route("/:id").put(inventoryController.putSpecificInventory)
+
 // // Route for "/inventories"
 // router.route("/").get((req, res) => (
 //     res.send("Hello from inventory")
