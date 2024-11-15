@@ -44,7 +44,7 @@ export const addItem = async (req, res) => {
     }
 
     // ensure quantity is a number value
-    if (typeof req.body.quantity !== "number") {
+    if (!req.body.quantity || typeof req.body.quantity !== "number") {
         return res
             .status(400)
             .json({ error: "Please provide a quantity for the item in the request body" });
