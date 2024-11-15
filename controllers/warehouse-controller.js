@@ -49,7 +49,6 @@ export const inventories = async (req, res) => {
             message: `Unable to retrieve inventories for warehouse with ID ${req.params.id}: ${error}`,
         });
     }
-<<<<<<< HEAD
   };
 
 //controller to add new warehouse
@@ -74,8 +73,6 @@ export const inventories = async (req, res) => {
         console.error('Error creating warehouse:', error);
         res.status(500).json({ message: 'Unable to add warehouse.', error: error.message });
     }
-=======
->>>>>>> 92e3979e469fde2b6781aa600beb45895327ea34
 };
 
 export const deleteOne = async (req, res) => {
