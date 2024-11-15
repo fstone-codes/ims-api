@@ -3,80 +3,86 @@ import configuration from "../knexfile.js";
 const knex = initKnex(configuration);
 
 export const getAllInventory = async (req, res) => {
-  console.log("Getting inventories");
-  try {
-    const inventories = await knex("inventories")
-      .join("warehouses", "inventories.warehouse_id", "=", "warehouses.id")
-      .select(
-        "inventories.id",
-        "warehouses.warehouse_name",
-        "inventories.item_name",
-        "inventories.description",
-        "inventories.category",
-        "inventories.status",
-        "inventories.quantity"
-      );
-    res.status(200).json(inventories);
-  } catch (error) {
-    res.status(400).send(`Error retrieving inventories: ${error}`);
-  }
+    console.log("Getting inventories");
+    try {
+        const inventories = await knex("inventories")
+            .join("warehouses", "inventories.warehouse_id", "=", "warehouses.id")
+            .select(
+                "inventories.id",
+                "warehouses.warehouse_name",
+                "inventories.item_name",
+                "inventories.description",
+                "inventories.category",
+                "inventories.status",
+                "inventories.quantity"
+            );
+        res.status(200).json(inventories);
+    } catch (error) {
+        res.status(400).send(`Error retrieving inventories: ${error}`);
+    }
 };
 
 // Route "/api/inventories"
 export const addItem = async (req, res) => {
-  // validate body contents
-  // ensure no spaces at the beginning of inputs
-  req.body.item_name = req.body.item_name.trim();
-  req.body.description = req.body.description.trim();
+    let { warehouse_id, item_name, description, category, status, quantity } = req.body;
 
-  // ensure no empty inputs for name + description
-  if (!req.body.item_name || !req.body.description) {
-    return res.status(400).json({
-      error:
-        "Please provide the name and description for the item in the request body",
-    });
-  }
+    // validate body contents
 
-  // ensure no empty inputs for category + warehouse (drop down inputs)
-  if (!req.body.category || !req.body.warehouse_id) {
-    return res.status(400).json({
-      error:
-        "Please provide the category and warehouse for the item in the request body",
-    });
-  }
+    // ensure no empty inputs for name + description
+    if (!item_name || !description) {
+        return res.status(400).json({
+            error: "Please provide the name and description for the item in the request body",
+        });
+    }
 
-  // ensure quantity is a number value
-  if (!req.body.quantity || typeof req.body.quantity !== "number") {
-    return res
-      .status(400)
-      .json({
-        error: "Please provide a quantity for the item in the request body",
-      });
-  }
+    // ensure no empty inputs for category warehouse + status (dynamic + drop down inputs)
+    if (!category || !warehouse_id || !status) {
+        return res.status(400).json({
+            error: "Please provide the category, warehouse and status for the item in the request body",
+        });
+    }
 
-  
-  try {
-    // insert request body into database ("inventories" table)
-    const data = await knex("inventories").insert(req.body);
+    // ensure no empty quantity, no negative numbers and the value is a number
+    if (quantity === undefined || quantity < 0 || typeof quantity !== "number") {
+        return res.status(400).json({
+            error: "Please provide a quantity for the item in the request body",
+        });
+    }
 
-    // store newly incremented item/row id (primary key) in a variable
-    const newItemId = data[0];
+    // ensure no spaces at the beginning of inputs
+    item_name = item_name.trim();
+    description = description.trim();
 
-    // store entire new table row in a variable
-    // desctructure object from array
-    const [createdItem] = await knex("inventories").where({ id: newItemId });
+    try {
+        // filter the "warehouses" table to the first warehouse/row with the "warehouse_id" from the post request body
+        const checkWarehouse = await knex("warehouses").where({ id: warehouse_id }).first();
 
-    // create new object without timestamps (without modifying original object)
-    const { created_at, updated_at, ...filteredItem } = createdItem;
+        // ensure new inventory item's warehouse exists in "warehouses" table
+        if (!checkWarehouse) {
+            return res.status(400).json({
+                error: `Warehouse id ${warehouse_id} not found.`,
+            });
+        }
 
-    // send response status and body
-    res.status(201).json(filteredItem);
-  } catch (error) {
-    console.error("Server post request error:", error);
-    res
-      .status(500)
-      .json({ message: "Server error: Not able to complete request" });
-  }
+        // insert request body into database ("inventories" table)
+        const data = await knex("inventories").insert(req.body);
+
+        // store newly incremented item/row id (primary key) in a variable
+        const newItemId = data[0];
+
+        // store entire new table row in a variable
+        // desctructure object from array
+        const [createdItem] = await knex("inventories").where({ id: newItemId });
+
+        // create new object without timestamps (without modifying original object)
+        const { created_at, updated_at, ...filteredItem } = createdItem;
+
+        // send response status and body
+        res.status(201).json(filteredItem);
+    } catch (error) {
+        console.error("Server post request error:", error);
+        res.status(500).json({ error: "Not able to complete request on the server" });
+    }
 };
 
 //delete inventory with specific id function
@@ -115,56 +121,42 @@ export const findOne = async (req, res) => {
 
 //put/edit an inventory item
 export const putSpecificInventory = async (req, res) => {
-  const { id } = req.params;
-  const { warehouse_id, item_name, description, category, status, quantity } =
-    req.body;
+    const { id } = req.params;
+    const { warehouse_id, item_name, description, category, status, quantity } = req.body;
 
-  if (
-    !warehouse_id ||
-    !item_name ||
-    !description ||
-    !category ||
-    !status ||
-    !quantity == null
-  ) {
-    return res
-      .status(400)
-      .json({ error: "Unsucessfull because of missing properties." });
-  }
-  if (typeof quantity !== "number") {
-    return res.status(400).json({ error: "Quantity must be a number." });
-  }
-  try {
-    const warehouseCheck = await knex("warehouses")
-      .where({ id: warehouse_id })
-      .first();
-    if (!warehouseCheck) {
-      return res
-        .status(400)
-        .json({
-          error: "Warehouse id value does not exist in the warehouse table.",
+    if (!warehouse_id || !item_name || !description || !category || !status || !quantity == null) {
+        return res.status(400).json({ error: "Unsucessfull because of missing properties." });
+    }
+    if (typeof quantity !== "number") {
+        return res.status(400).json({ error: "Quantity must be a number." });
+    }
+    try {
+        const warehouseCheck = await knex("warehouses").where({ id: warehouse_id }).first();
+        if (!warehouseCheck) {
+            return res.status(400).json({
+                error: "Warehouse id value does not exist in the warehouse table.",
+            });
+        }
+        const inventoryCheck = await knex("inventories").where({ id }).first();
+        if (!inventoryCheck) {
+            return res.status(400).json({ error: "Inventory id was not found. " });
+        }
+
+        //if everything checks, add inventory
+        await knex("inventories").where({ id }).update({
+            warehouse_id,
+            item_name,
+            description,
+            category,
+            status,
+            quantity,
         });
-    }
-    const inventoryCheck = await knex("inventories").where({ id }).first();
-    if (!inventoryCheck) {
-      return res.status(400).json({ error: "Inventory id was not found. " });
-    }
 
-    //if everything checks, add inventory
-    await knex("inventories").where({ id }).update({
-      warehouse_id,
-      item_name,
-      description,
-      category,
-      status,
-      quantity,
-    });
+        const [createdInventory] = await knex("inventories").where({ id });
+        const { created_at, updated_at, ...newInventory } = createdInventory;
 
-    const [createdInventory] = await knex("inventories").where({ id });
-    const { created_at, updated_at, ...newInventory } = createdInventory;
-    
-    res.status(200).json(newInventory);
-  } catch (error) {
-    res.status(500).json({ error: "Error updating inventory" });
-  }
+        res.status(200).json(newInventory);
+    } catch (error) {
+        res.status(500).json({ error: "Error updating inventory" });
+    }
 };
