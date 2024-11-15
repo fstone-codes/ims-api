@@ -95,7 +95,7 @@ export const findOne = async (req, res) => {
     try {
         const inventory = await knex("inventories").where({ id: inventoryId }).first();
         if (!inventory) {
-            return res.status(404).json({ error: `Inventory with ID ${id} not found.` });
+            return res.status(404).json({ error: `Inventory with ID ${inventoryId} not found.` });
         }
         res.status(200).json(inventory);
     } catch (err) {
