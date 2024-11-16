@@ -18,4 +18,7 @@ router.route("/:id/inventories").get(warehouseController.inventories);
 //Route for "/warehouses/add"
 router.route("/").post(warehouseController.addWarehouse);
 
+//Route for"/warehouses/:id/edit"
+router.route("/:id").put(warehouseController.updateWarehouse);
+
 export default router;
