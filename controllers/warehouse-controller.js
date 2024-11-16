@@ -210,10 +210,7 @@ export const updateWarehouse = async (req, res) => {
 
         const updatedWarehouse = await knex("warehouses").where({ id: warehouseId }).first();
         const { created_at, updated_at, ...filteredWarehouse } = updatedWarehouse;
-        res.status(200).json({
-          message: "Warehouse successfully updated.",
-          warehouse: filteredWarehouse,
-        });
+        res.status(200).json({filteredWarehouse});
     } catch (error) {
         console.error("Error editing warehouse:", error);
         res.status(500).json({
