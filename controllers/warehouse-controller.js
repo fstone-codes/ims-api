@@ -4,7 +4,6 @@ const knex = initKnex(configuration);
 
 // Route "/api/warehouses/"
 export const index = async (req, res) => {
-    console.log("hello");
     try {
         const data = await knex("warehouses");
         res.status(200).json(data);
@@ -14,7 +13,7 @@ export const index = async (req, res) => {
     }
 };
 
-//Controller to get warehouse by ID "/api/warehouses/:id"
+// Controller to get warehouse by ID "/api/warehouses/:id"
 export const findOne = async (req, res) => {
     const warehouseId = req.params.id;
     try {
@@ -142,7 +141,7 @@ export const deleteOne = async (req, res) => {
     }
 };
 
-//controller to edit warehouse
+// Controller to edit warehouse
 export const updateWarehouse = async (req, res) => {
     const warehouseId = req.params.id;
     const {
@@ -205,11 +204,14 @@ export const updateWarehouse = async (req, res) => {
             contact_position,
             contact_phone,
             contact_email,
-            updated_at: knex.fn.now(), 
+            updated_at: knex.fn.now(),
         });
 
-        const updatedWarehouse = await knex("warehouses").where({ id: warehouseId }).first();
-        const { created_at, updated_at, ...filteredWarehouse } = updatedWarehouse;
+        const updatedWarehouse = await knex("warehouses")
+            .where({ id: warehouseId })
+            .first();
+        const { created_at, updated_at, ...filteredWarehouse } =
+            updatedWarehouse;
         res.status(200).json(filteredWarehouse);
     } catch (error) {
         console.error("Error editing warehouse:", error);
