@@ -4,11 +4,11 @@ import cors from "cors";
 
 const app = express();
 
-const { DB_PORT, CORS_ORIGIN } = process.env;
+const PORT = process.env.PORT || 3000;
 
 app.use(
     cors({
-        origin: CORS_ORIGIN,
+        origin: process.env.CORS_ORIGIN,
         methods: "GET,POST,PUT,DELETE,OPTIONS",
         allowedHeaders: "Content-Type, Authorization",
     })
@@ -29,6 +29,6 @@ app.get("/", (req, res) => {
 });
 
 // Server setup
-app.listen(DB_PORT, () => {
-    console.log(`Server is listening at http://localhost:${DB_PORT}`);
+app.listen(PORT, () => {
+    console.log(`Server is listening on port ${PORT}`);
 });
