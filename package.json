@@ -8,8 +8,7 @@
         "start": "node index.js",
         "dev": "nodemon index.js",
         "db:migrate": "npx knex migrate:latest",
-        "db:seed": "npx knex seed:run",
-        "dev": "node --watch index.js"
+        "db:seed": "npx knex seed:run"
     },
     "keywords": [],
     "author": "",
