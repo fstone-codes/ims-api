@@ -29,6 +29,29 @@ app.get("/", (req, res) => {
 });
 
 // Server setup
-app.listen(PORT, () => {
-    console.log(`Server is listening on port ${PORT}`);
-});
+// app.listen(PORT, () => {
+//     console.log(`Server is listening on port ${PORT}`);
+// });
+
+// Server setup with retry logic
+const startServer = () => {
+    try {
+        const server = app.listen(PORT, () => {
+            console.log(`Server is successfully listening on port ${PORT}`);
+        });
+
+        server.on("error", (error) => {
+            console.error("Server error:", error);
+            if (error.code === "EADDRINUSE") {
+                console.log(`Port ${PORT} is busy, retrying in 10 seconds...`);
+                setTimeout(startServer, 10000);
+            }
+        });
+    } catch (error) {
+        console.error("Failed to start server:", error);
+    }
+};
+
+startServer();
+
+console.log("Application initialization completed");
